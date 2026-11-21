@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BrightShop Storefront</title>
+    <link rel="stylesheet" href="store.css">
+    <script src="store.js" defer></script>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" hidden>
+        <symbol id="tee" viewBox="0 0 200 150">
+            <path fill="#36756c" d="M77 25 55 34 31 67l28 18 13-15v55h56V70l13 15 28-18-24-33-22-9c-6 17-40 17-46 0Z"/>
+            <path fill="none" stroke="#214f49" stroke-width="3" d="M77 27c8 20 38 20 46 0M73 115h54"/>
+        </symbol>
+        <symbol id="sweater" viewBox="0 0 200 150">
+            <path fill="#9e4939" d="M77 27 55 36 34 114l22 7 15-46v53h58V75l15 46 22-7-21-78-22-9Z"/>
+            <path fill="none" stroke="#743226" stroke-width="3" d="M77 29q23 25 46 0M71 119h58M37 106l22 7m82 0 22-7"/>
+        </symbol>
+        <symbol id="mug" viewBox="0 0 200 150">
+            <path fill="none" stroke="#416e86" stroke-width="10" d="M129 57h16a16 16 0 1 1 0 32h-16"/>
+            <path fill="#5990a9" d="M53 44h84v44a30 30 0 0 1-30 30H83a30 30 0 0 1-30-30Z"/>
+            <ellipse cx="95" cy="44" rx="42" ry="10" fill="#416e86"/>
+            <path stroke="#7eabc0" stroke-width="3" d="M68 75h54m-54 9h54"/>
+        </symbol>
+        <symbol id="throw" viewBox="0 0 200 150">
+            <path fill="none" stroke="#955e24" stroke-width="4" d="M53 101v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15"/>
+            <rect x="48" y="35" width="110" height="70" rx="5" fill="#c78942"/>
+            <path fill="none" stroke="#f7cf99" stroke-width="5" d="M52 57h102M52 84h102M76 38v64m52-64v64"/>
+        </symbol>
+    </svg>
+    <header class="site-header">
+        <div class="wrap header-row">
+            <a class="brand" href="#shop">BrightShop</a>
+            <nav aria-label="Main navigation">
+                <a href="#shop" id="shop-link">Shop</a>
+                <a href="#cart" id="cart-link">Cart (<span id="cart-count">0</span>)</a>
+            </nav>
+        </div>
+    </header>
+    <main class="wrap" id="store" tabindex="-1">
+        <noscript>Turn on JavaScript to browse the demo store.</noscript>
+    </main>
+    <p id="feedback" class="sr-only" role="status"></p>
+    <footer class="wrap">BrightShop Storefront &middot; Demo only &middot; No real orders</footer>
+</body>
+</html>
