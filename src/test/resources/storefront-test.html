@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BrightShop browser checks</title>
+</head>
+<body data-status="running">
+    <h1>BrightShop browser checks</h1>
+    <p id="result">Running</p>
+    <script>
+        async function runChecks() {
+            localStorage.removeItem('brightshop-cart');
+            const frame = document.createElement('iframe');
+            frame.title = 'Storefront under test';
+            const loaded = new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
+            frame.src = '/';
+            document.body.append(frame);
+            await loaded;
+
+            let doc = frame.contentDocument;
+            const win = frame.contentWindow;
+            const main = () => doc.querySelector('#store');
+            const check = (condition, message) => {
+                if (!condition) throw new Error(message);
+            };
+            const checkLayout = () => check(doc.documentElement.scrollWidth <= doc.documentElement.clientWidth,
+                'The page overflows the browser width');
+            const selectCategory = name => {
+                const button = [...main().querySelectorAll('button')].find(item => item.textContent.trim() === name);
+                check(button, `Missing category: ${name}`);
+                button.click();
+                check(main().querySelector('[aria-pressed="true"]').textContent.trim() === name,
+                    `Category not selected: ${name}`);
+            };
+            const visit = async hash => {
+                const link = doc.querySelector(`a[href="${hash}"]`);
+                check(link, `Missing link: ${hash}`);
+                if (win.location.hash === hash) return;
+                const changed = new Promise(resolve => win.addEventListener('hashchange', resolve, { once: true }));
+                link.click();
+                await changed;
+            };
+
+            check(main().querySelectorAll('.card').length >= 8, 'The expanded catalog is not displayed');
+            checkLayout();
+            check(main().textContent.includes('Everyday Cotton Tee') && main().textContent.includes('€19.90'),
+                'The original product or grid price is missing');
+            selectCategory('Accessories');
+            check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Cotton Crew Socks')
+                && !main().textContent.includes('Glazed Stoneware Mug'), 'Accessories filter is incorrect');
+            await visit('#product/scarf');
+            check(main().querySelector('h1').textContent === 'Soft Knit Scarf', 'New product detail is missing');
+            main().querySelector('[data-add="scarf"]').click();
+            await visit('#cart');
+            check(main().textContent.includes('22.00 EUR each'), 'New product is missing from the cart');
+            main().querySelector('[data-add="scarf"]').click();
+            check(main().textContent.includes('44.00 EUR'), 'Cart subtotal did not update');
+
+            await visit('#shop');
+            selectCategory('Kitchen & dining');
+            check(main().textContent.includes('Stoneware Serving Bowl')
+                && main().textContent.includes('Glazed Stoneware Mug')
+                && !main().textContent.includes('Soft Knit Scarf'), 'Kitchen filter is incorrect');
+            selectCategory('Living');
+            check(main().textContent.includes('Textured Cushion') && main().textContent.includes('Woven Cotton Throw'),
+                'Living filter is incorrect');
+            selectCategory('Home goods');
+            check(main().textContent.includes('Stoneware Serving Bowl') && main().textContent.includes('Woven Cotton Throw')
+                && !main().textContent.includes('Soft Knit Scarf'), 'Home goods filter is incorrect');
+            selectCategory('Clothes');
+            check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Linen Blend Shirt'),
+                'Clothes filter is incorrect');
+            await visit('#product/tee');
+            main().querySelector('[data-add="tee"]').click();
+            await visit('#cart');
+            check(main().textContent.includes('19.90 EUR each') && main().textContent.includes('63.90 EUR'),
+                'Cart price format or mixed-product subtotal is incorrect');
+
+            const reloaded = new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
+            win.location.reload();
+            await reloaded;
+            doc = frame.contentDocument;
+            check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Everyday Cotton Tee')
+                && main().textContent.includes('63.90 EUR'), 'Cart did not survive a reload');
+            main().querySelector('[data-less="tee"]').click();
+            check(!main().textContent.includes('Everyday Cotton Tee') && main().textContent.includes('44.00 EUR'),
+                'Removing a cart item did not update the subtotal');
+
+            const pages = [
+                ['#location', 'Location', 'Amsterdam'],
+                ['#history', 'Our story', '2014'],
+                ['#opening-times', 'Opening times', '09:00'],
+                ['#contact', 'Contact', 'hello@brightshop.example'],
+                ['#faq', 'Frequently asked questions', 'Can I place an order?'],
+                ['#refunds', 'Returns and refunds', '30 days']
+            ];
+            for (const [hash, heading, content] of pages) {
+                await visit(hash);
+                check(main().querySelector('h1').textContent === heading && main().textContent.includes(content),
+                    `Information page is incorrect: ${heading}`);
+                check(main().textContent.includes('fictional') &&
+                    doc.querySelector('[data-nav][aria-current="page"]').getAttribute('href') === hash,
+                    `Demo notice or active navigation is missing: ${heading}`);
+                checkLayout();
+                if (hash === '#faq') {
+                    main().querySelector('summary').click();
+                    check(main().querySelector('details').open, 'FAQ answer did not open');
+                }
+            }
+        }
+
+        runChecks().then(() => {
+            document.body.dataset.status = 'passed';
+            document.querySelector('#result').textContent = 'All browser checks passed.';
+        }).catch(error => {
+            document.body.dataset.status = 'failed';
+            document.querySelector('#result').textContent = error.message;
+            console.error(error);
+        });
+    </script>
+</body>
+</html>

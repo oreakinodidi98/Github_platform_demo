@@ -3,16 +3,96 @@ const products = [
         description: 'A soft cotton tee in forest green with a relaxed fit and a classic crew neck.' },
     { id: 'sweater', name: 'Ribbed Crew Jumper', category: 'Clothes', cents: 4590,
         description: 'A warm brick-red jumper with a ribbed neck, hem and cuffs.' },
-    { id: 'mug', name: 'Glazed Stoneware Mug', category: 'Home goods', cents: 1250,
+    { id: 'shirt', name: 'Linen Blend Shirt', category: 'Clothes', cents: 3990,
+        description: 'A light blue linen-blend shirt with a relaxed shape and a button front.' },
+    { id: 'scarf', name: 'Soft Knit Scarf', category: 'Clothes', subcategory: 'Accessories', cents: 2200,
+        description: 'A soft lilac knit scarf for cooler days.' },
+    { id: 'socks', name: 'Cotton Crew Socks', category: 'Clothes', subcategory: 'Accessories', cents: 990, sale: true,
+        description: 'Two pairs of comfortable cotton crew socks in warm, muted colours.' },
+    { id: 'mug', name: 'Glazed Stoneware Mug', category: 'Home goods', subcategory: 'Kitchen & dining', cents: 1250,
         description: 'A blue glazed stoneware mug with a wide handle. Holds 350 ml.' },
-    { id: 'throw', name: 'Woven Cotton Throw', category: 'Home goods', cents: 3490, sale: true,
-        description: 'A checked cotton throw with a warm ochre finish and fringed edges.' }
+    { id: 'throw', name: 'Woven Cotton Throw', category: 'Home goods', subcategory: 'Living', cents: 3490, sale: true,
+        description: 'A checked cotton throw with a warm ochre finish and fringed edges.' },
+    { id: 'bowl', name: 'Stoneware Serving Bowl', category: 'Home goods', subcategory: 'Kitchen & dining', cents: 2490,
+        description: 'A glazed stoneware bowl for sharing salads, fruit or snacks.' },
+    { id: 'towel', name: 'Striped Tea Towel', category: 'Home goods', subcategory: 'Kitchen & dining', cents: 890,
+        description: 'A cotton tea towel with soft green stripes and a hanging loop.' },
+    { id: 'cushion', name: 'Textured Cushion', category: 'Home goods', subcategory: 'Living', cents: 2990,
+        description: 'A textured cushion in a warm terracotta shade for a cosy sofa.' }
 ];
+
+const pages = {
+    '#location': {
+        title: 'Location',
+        content: `
+            <h2>BrightShop Example Store</h2>
+            <address>12 Market Street<br>Amsterdam<br>Netherlands</address>
+            <p>Visit our example store for clothes and home goods.</p>
+            <p><a href="#opening-times">See opening times</a></p>`
+    },
+    '#history': {
+        title: 'Our story',
+        content: `
+            <p>In this demo, BrightShop began as a small neighbourhood shop in 2014,
+                offering practical clothes and thoughtful pieces for the home.</p>
+            <p>Its fictional collection has since grown to bring everyday essentials
+                to customers across Europe.</p>`
+    },
+    '#opening-times': {
+        title: 'Opening times',
+        content: `
+            <p>Example opening hours for the BrightShop store:</p>
+            <table class="hours">
+                <caption class="sr-only">Example store opening times</caption>
+                <tbody>
+                    <tr><th scope="row">Monday - Friday</th><td>09:00 - 18:00</td></tr>
+                    <tr><th scope="row">Saturday</th><td>10:00 - 17:00</td></tr>
+                    <tr><th scope="row">Sunday</th><td>Closed</td></tr>
+                </tbody>
+            </table>
+            <p><a href="#location">See our example location</a></p>`
+    },
+    '#contact': {
+        title: 'Contact',
+        content: `
+            <p>These example details do not reach a real customer service team.</p>
+            <p><strong>Email:</strong> hello@brightshop.example<br>
+                <strong>Phone:</strong> +31 (0)20 000 0000</p>
+            <p>Looking for a quick answer? Visit our <a href="#faq">FAQ</a>.</p>`
+    },
+    '#faq': {
+        title: 'Frequently asked questions',
+        content: `
+            <details class="faq-item">
+                <summary>Can I place an order?</summary>
+                <p>No. This is a demo storefront; checkout and payments are not available.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Does my cart stay saved?</summary>
+                <p>Your cart is saved in this browser on this device. It is not shared with a store.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Where can I find the returns policy?</summary>
+                <p>See the example <a href="#refunds">returns and refunds</a> page.</p>
+            </details>`
+    },
+    '#refunds': {
+        title: 'Returns and refunds',
+        content: `
+            <p>This example policy is for the demo only. The site cannot accept returns
+                or issue refunds.</p>
+            <h2>Example return window</h2>
+            <p>In this example, customers have 30 days after delivery to return unused items.</p>
+            <h2>Example refund</h2>
+            <p>A refund would be issued to the original payment method after the return is checked.</p>
+            <p>Questions? See our example <a href="#contact">contact details</a>.</p>`
+    }
+};
 
 const store = document.querySelector('#store');
 const feedback = document.querySelector('#feedback');
 const storageKey = 'brightshop-cart';
-const categories = ['All', 'Clothes', 'Home goods'];
+const categories = ['All', 'Clothes', 'Accessories', 'Home goods', 'Kitchen & dining', 'Living'];
 const cart = readCart();
 let category = 'All';
 
@@ -44,7 +124,8 @@ const art = product => `<svg class="art ${product.id}" viewBox="0 0 200 150" ari
 const sale = product => product.sale ? '<span class="sale-tag">Sale</span>' : '';
 
 function shopView() {
-    const selection = products.filter(product => category === 'All' || product.category === category);
+    const selection = products.filter(product =>
+        category === 'All' || product.category === category || product.subcategory === category);
     return `
         <section class="hero">
             <p class="eyebrow">The everyday collection</p>
@@ -124,9 +205,20 @@ function updateCount() {
     document.querySelector('#cart-count').textContent = Object.values(cart).reduce((sum, quantity) => sum + quantity, 0);
 }
 
+function informationView(page) {
+    return `
+        <article class="info-page">
+            <p class="eyebrow">BrightShop information</p>
+            <h1>${page.title}</h1>
+            <p class="demo-note">The store details on this page are fictional and for demonstration only.</p>
+            ${page.content}
+        </article>`;
+}
+
 function render(moveFocus = false) {
     const route = location.hash || '#shop';
     const product = products.find(item => productLink(item) === route);
+    const page = pages[route];
     const isCart = route === '#cart';
     const isShop = route === '#shop';
     let title = 'Shop';
@@ -138,15 +230,18 @@ function render(moveFocus = false) {
         title = product.name;
     } else if (isShop) {
         store.innerHTML = shopView();
+    } else if (page) {
+        store.innerHTML = informationView(page);
+        title = page.title;
     } else {
         store.innerHTML = '<h1>Page not found</h1><a href="#shop">Back to shop</a>';
         title = 'Page not found';
     }
 
     document.title = `${title} | BrightShop`;
-    for (const [id, active] of [['shop-link', isShop], ['cart-link', isCart]]) {
-        const link = document.getElementById(id);
-        if (active) link.setAttribute('aria-current', 'page');
+    const activeRoute = product ? '#shop' : route;
+    for (const link of document.querySelectorAll('[data-nav]')) {
+        if (link.getAttribute('href') === activeRoute) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
     }
     updateCount();
