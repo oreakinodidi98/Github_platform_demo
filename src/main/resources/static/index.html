@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BrightShop Storefront</title>
+    <link rel="stylesheet" href="store.css">
+    <script src="store.js" defer></script>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" hidden>
+        <symbol id="tee" viewBox="0 0 200 150">
+            <path fill="#36756c" d="M77 25 55 34 31 67l28 18 13-15v55h56V70l13 15 28-18-24-33-22-9c-6 17-40 17-46 0Z"/>
+            <path fill="none" stroke="#214f49" stroke-width="3" d="M77 27c8 20 38 20 46 0M73 115h54"/>
+        </symbol>
+        <symbol id="sweater" viewBox="0 0 200 150">
+            <path fill="#9e4939" d="M77 27 55 36 34 114l22 7 15-46v53h58V75l15 46 22-7-21-78-22-9Z"/>
+            <path fill="none" stroke="#743226" stroke-width="3" d="M77 29q23 25 46 0M71 119h58M37 106l22 7m82 0 22-7"/>
+        </symbol>
+        <symbol id="shirt" viewBox="0 0 200 150">
+            <path fill="#7c9da6" d="M77 25 54 34 33 104l22 9 15-42v57h60V71l15 42 22-9-21-70-23-9Z"/>
+            <path fill="#d3e2e2" d="m77 25 23 19-17 10-10-25m50-4-23 19 17 10 10-25"/>
+            <path fill="none" stroke="#4d717a" stroke-width="3" d="M100 44v84M70 117h60"/>
+            <circle cx="105" cy="61" r="2" fill="#edf3f2"/>
+            <circle cx="105" cy="76" r="2" fill="#edf3f2"/>
+            <circle cx="105" cy="91" r="2" fill="#edf3f2"/>
+        </symbol>
+        <symbol id="scarf" viewBox="0 0 200 150">
+            <path fill="#806b95" d="M62 36q38-27 76 0v28q-8 9-17 12v45H99V80q-9 0-17-2v43H60V68q-7-13 2-32Z"/>
+            <path fill="none" stroke="#cdbdd8" stroke-width="4" d="M63 40q37 28 74 0M62 64q37 27 74 0M62 108h20m17 0h22"/>
+            <path stroke="#806b95" stroke-width="4" d="M64 120v8m7-8v8m7-8v8m25-8v8m7-8v8m7-8v8"/>
+        </symbol>
+        <symbol id="socks" viewBox="0 0 200 150">
+            <path fill="#d8ae6d" d="M54 28h36v54q0 12-10 18l-22 13q-15 8-22-3-7-11 5-19l13-9Z"/>
+            <path fill="#728e79" d="M105 28h36v54q0 12-10 18l-22 13q-15 8-22-3-7-11 5-19l13-9Z"/>
+            <path fill="none" stroke="#fff4dd" stroke-width="4" d="M54 42h36m15 0h36"/>
+        </symbol>
+        <symbol id="mug" viewBox="0 0 200 150">
+            <path fill="none" stroke="#416e86" stroke-width="10" d="M129 57h16a16 16 0 1 1 0 32h-16"/>
+            <path fill="#5990a9" d="M53 44h84v44a30 30 0 0 1-30 30H83a30 30 0 0 1-30-30Z"/>
+            <ellipse cx="95" cy="44" rx="42" ry="10" fill="#416e86"/>
+            <path stroke="#7eabc0" stroke-width="3" d="M68 75h54m-54 9h54"/>
+        </symbol>
+        <symbol id="throw" viewBox="0 0 200 150">
+            <path fill="none" stroke="#955e24" stroke-width="4" d="M53 101v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15m11-15v15"/>
+            <rect x="48" y="35" width="110" height="70" rx="5" fill="#c78942"/>
+            <path fill="none" stroke="#f7cf99" stroke-width="5" d="M52 57h102M52 84h102M76 38v64m52-64v64"/>
+        </symbol>
+        <symbol id="bowl" viewBox="0 0 200 150">
+            <path fill="#b87863" d="M40 65q5 54 60 54t60-54Z"/>
+            <ellipse cx="100" cy="65" rx="60" ry="17" fill="#dcae9c"/>
+            <ellipse cx="100" cy="65" rx="48" ry="10" fill="#f3d9ca"/>
+            <path fill="none" stroke="#965945" stroke-width="3" d="M68 111h64"/>
+        </symbol>
+        <symbol id="towel" viewBox="0 0 200 150">
+            <path fill="none" stroke="#698a7a" stroke-width="5" d="M88 34q0-15 12-15t12 15"/>
+            <rect x="57" y="34" width="86" height="90" rx="4" fill="#e7dfc9"/>
+            <path fill="none" stroke="#9bb1a3" stroke-width="7" d="M57 54h86M57 72h86M57 90h86M57 108h86"/>
+        </symbol>
+        <symbol id="cushion" viewBox="0 0 200 150">
+            <path fill="#d48b79" d="M53 29q47 7 94 0-7 46 0 92-47-7-94 0 7-46 0-92Z"/>
+            <path fill="none" stroke="#a95e4e" stroke-width="3" d="M63 40q37 5 74 0-5 35 0 70-37-5-74 0 5-35 0-70Z"/>
+            <path fill="none" stroke="#e9b9aa" stroke-width="3" d="M77 49v52m15-52v52m15-52v52m15-52v52"/>
+        </symbol>
+    </svg>
+    <header class="site-header">
+        <div class="wrap header-row">
+            <a class="brand" href="#shop">BrightShop</a>
+            <a href="#cart" id="cart-link" data-nav>Cart (<span id="cart-count">0</span>)</a>
+        </div>
+        <nav class="wrap site-nav" aria-label="Main navigation">
+            <a href="#shop" data-nav>Shop</a>
+            <a href="#location" data-nav>Location</a>
+            <a href="#history" data-nav>Our story</a>
+            <a href="#opening-times" data-nav>Opening times</a>
+            <a href="#contact" data-nav>Contact</a>
+            <a href="#faq" data-nav>FAQ</a>
+            <a href="#refunds" data-nav>Returns &amp; refunds</a>
+        </nav>
+    </header>
+    <main class="wrap" id="store" tabindex="-1">
+        <noscript>Turn on JavaScript to browse the demo store.</noscript>
+    </main>
+    <p id="feedback" class="sr-only" role="status"></p>
+    <footer class="wrap">BrightShop Storefront &middot; Demo only &middot; No real orders</footer>
+</body>
+</html>
