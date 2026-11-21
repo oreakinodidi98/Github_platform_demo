@@ -23,6 +23,18 @@
             const check = (condition, message) => {
                 if (!condition) throw new Error(message);
             };
+            const checkCartPrice = (id, unitPrice, itemTotal) => {
+                const row = main().querySelector(`a[href="#product/${id}"]`).closest('.cart-row');
+                check(row.querySelector('h2 + p').firstChild.textContent.trim() === `${unitPrice} each`,
+                    `Cart unit price is incorrect: ${id}`);
+                check(row.querySelector('.price').textContent === `Item total: ${itemTotal}`,
+                    `Cart item total is incorrect: ${id}`);
+            };
+            const checkSubtotal = expected => {
+                check(main().querySelector('.summary .total strong:last-child').textContent === expected,
+                    'Cart subtotal is incorrect');
+                check(!main().textContent.includes(' EUR'), 'The cart still uses the amount-first currency format');
+            };
             const checkLayout = () => check(doc.documentElement.scrollWidth <= doc.documentElement.clientWidth,
                 'The page overflows the browser width');
             const selectCategory = name => {
@@ -45,6 +57,9 @@
             checkLayout();
             check(main().textContent.includes('Everyday Cotton Tee') && main().textContent.includes('€19.90'),
                 'The original product or grid price is missing');
+            const teeGridPrice = main().querySelector('a[href="#product/tee"]').closest('.card')
+                .querySelector('.price').firstChild.textContent.trim();
+            check(teeGridPrice === '€19.90', 'The tee grid price format is incorrect');
             selectCategory('Accessories');
             check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Cotton Crew Socks')
                 && !main().textContent.includes('Glazed Stoneware Mug'), 'Accessories filter is incorrect');
@@ -52,9 +67,11 @@
             check(main().querySelector('h1').textContent === 'Soft Knit Scarf', 'New product detail is missing');
             main().querySelector('[data-add="scarf"]').click();
             await visit('#cart');
-            check(main().textContent.includes('22.00 EUR each'), 'New product is missing from the cart');
+            checkCartPrice('scarf', '€22.00', '€22.00');
+            checkSubtotal('€22.00');
             main().querySelector('[data-add="scarf"]').click();
-            check(main().textContent.includes('44.00 EUR'), 'Cart subtotal did not update');
+            checkCartPrice('scarf', '€22.00', '€44.00');
+            checkSubtotal('€44.00');
 
             await visit('#shop');
             selectCategory('Kitchen & dining');
@@ -71,20 +88,33 @@
             check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Linen Blend Shirt'),
                 'Clothes filter is incorrect');
             await visit('#product/tee');
+            check(main().querySelector('.price').firstChild.textContent.trim() === teeGridPrice,
+                'The tee detail price does not match the grid');
             main().querySelector('[data-add="tee"]').click();
             await visit('#cart');
-            check(main().textContent.includes('19.90 EUR each') && main().textContent.includes('63.90 EUR'),
-                'Cart price format or mixed-product subtotal is incorrect');
+            checkCartPrice('tee', teeGridPrice, '€19.90');
+            checkCartPrice('scarf', '€22.00', '€44.00');
+            checkSubtotal('€63.90');
+            main().querySelector('[data-add="tee"]').click();
+            checkCartPrice('tee', teeGridPrice, '€39.80');
+            checkSubtotal('€83.80');
+            main().querySelector('[data-less="tee"]').click();
+            checkCartPrice('tee', teeGridPrice, '€19.90');
+            checkSubtotal('€63.90');
 
             const reloaded = new Promise(resolve => frame.addEventListener('load', resolve, { once: true }));
             win.location.reload();
             await reloaded;
             doc = frame.contentDocument;
-            check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Everyday Cotton Tee')
-                && main().textContent.includes('63.90 EUR'), 'Cart did not survive a reload');
+            check(main().textContent.includes('Soft Knit Scarf') && main().textContent.includes('Everyday Cotton Tee'),
+                'Cart did not survive a reload');
+            checkCartPrice('tee', teeGridPrice, '€19.90');
+            checkCartPrice('scarf', '€22.00', '€44.00');
+            checkSubtotal('€63.90');
             main().querySelector('[data-less="tee"]').click();
-            check(!main().textContent.includes('Everyday Cotton Tee') && main().textContent.includes('44.00 EUR'),
-                'Removing a cart item did not update the subtotal');
+            check(!main().textContent.includes('Everyday Cotton Tee'), 'Removing a cart item did not remove the tee');
+            checkCartPrice('scarf', '€22.00', '€44.00');
+            checkSubtotal('€44.00');
 
             const pages = [
                 ['#location', 'Location', 'Amsterdam'],

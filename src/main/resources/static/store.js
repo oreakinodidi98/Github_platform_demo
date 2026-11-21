@@ -114,10 +114,8 @@ function readCart() {
     }));
 }
 
-const catalogueCurrency = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
-const cataloguePrice = cents => catalogueCurrency.format(cents / 100);
-// The checkout summary retains its legacy amount-first format for the demo.
-const checkoutPrice = cents => `${(cents / 100).toFixed(2)} EUR`;
+const currency = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
+const formatPrice = cents => currency.format(cents / 100);
 
 const productLink = product => `#product/${product.id}`;
 const art = product => `<svg class="art ${product.id}" viewBox="0 0 200 150" aria-hidden="true"><use href="#${product.id}"></use></svg>`;
@@ -144,7 +142,7 @@ function shopView() {
                     <div class="card-body">
                         <p class="category">${product.category}</p>
                         <h2><a href="${productLink(product)}">${product.name}</a></h2>
-                        <p class="price">${cataloguePrice(product.cents)} ${sale(product)}</p>
+                        <p class="price">${formatPrice(product.cents)} ${sale(product)}</p>
                     </div>
                 </article>`).join('')}
         </div>`;
@@ -159,7 +157,7 @@ function detailView(product) {
                 <p class="category">${product.category}</p>
                 <h1>${product.name}</h1>
                 <p>${product.description}</p>
-                <p class="price">${cataloguePrice(product.cents)} ${sale(product)}</p>
+                <p class="price">${formatPrice(product.cents)} ${sale(product)}</p>
                 <button type="button" class="action" data-add="${product.id}">Add to cart</button>
                 <p id="add-result" aria-hidden="true"></p>
             </div>
@@ -181,9 +179,9 @@ function cartView() {
                         ${art(product)}
                         <div>
                             <h2><a href="${productLink(product)}">${product.name}</a></h2>
-                            <p>${checkoutPrice(product.cents)} each
+                            <p>${formatPrice(product.cents)} each
                                 ${product.sale ? '<span class="cart-sale">Sale</span>' : ''}</p>
-                            <p class="price">Item total: ${checkoutPrice(product.cents * cart[product.id])}</p>
+                            <p class="price">Item total: ${formatPrice(product.cents * cart[product.id])}</p>
                             <div class="quantity">
                                 <button type="button" data-less="${product.id}" aria-label="Decrease quantity of ${product.name}">&minus;</button>
                                 <span>Quantity: ${cart[product.id]}</span>
@@ -194,7 +192,7 @@ function cartView() {
             </ul>
             <section class="summary">
                 <h2>Checkout summary</h2>
-                <p class="total"><strong>Subtotal</strong><strong>${checkoutPrice(subtotal)}</strong></p>
+                <p class="total"><strong>Subtotal</strong><strong>${formatPrice(subtotal)}</strong></p>
                 <p>Demo only. No shipping or payments.</p>
                 <a href="#shop">Continue shopping</a>
             </section>
