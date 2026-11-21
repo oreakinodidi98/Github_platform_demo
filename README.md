@@ -70,12 +70,13 @@ The cart is stored in the browser for the current address and port. It is not
 shared with another browser or device. Clearing site data clears the cart.
 The checkout page is a summary only; it cannot place an order.
 
+Prices use the same euro format in the product grid, product details, and cart.
+For example, the Everyday Cotton Tee is `€19.90` in each view. Cart item totals
+and subtotal use the same format.
+
 ## Known demo inconsistency
 
-The price format and sale badge deliberately differ between the catalog and
-cart. For example, the Everyday Cotton Tee is `€19.90` on the product grid
-and `19.90 EUR` in the cart. The amount is the same. See
-[#2](https://github.com/oreakinodidi98/Github_platform_demo/issues/2).
+The sale badge deliberately differs between the catalog and cart.
 
 ## Repository structure
 
