@@ -1,0 +1,31 @@
+{
+    "name": "BrightShop Storefront",
+    "image": "mcr.microsoft.com/devcontainers/java:3-17-bookworm",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "none",
+            "installMaven": true,
+            "installGradle": false
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    "remoteUser": "vscode",
+    "forwardPorts": [8080, 18766],
+    "portsAttributes": {
+        "8080": {
+            "label": "BrightShop storefront",
+            "onAutoForward": "notify"
+        },
+        "18766": {
+            "label": "Storefront browser checks",
+            "onAutoForward": "silent"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": ["vscjava.vscode-java-pack"]
+        }
+    },
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y --no-install-recommends chromium && mvn --batch-mode --no-transfer-progress package",
+    "waitFor": "postCreateCommand"
+}

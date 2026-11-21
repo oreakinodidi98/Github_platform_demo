@@ -12,10 +12,32 @@ fictional. The contact details do not reach a real store.
 
 ## Requirements
 
+For a local run:
+
 - Java 17 or later
 - Maven
 - A browser with JavaScript and local storage enabled
 - Internet access when Maven downloads dependencies for the first time
+
+## Use the dev container
+
+The [dev container](.devcontainer/devcontainer.json) provides Java 17, Maven,
+Git, GitHub CLI, curl, Chromium, and the VS Code Java Extension Pack.
+
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   with Linux containers enabled and the
+   [VS Code Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+   On Windows, use Docker Desktop's WSL 2 backend.
+2. Open this repository in VS Code. Press `F1` and select
+   **Dev Containers: Reopen in Container**.
+3. Wait for setup to finish. It installs Chromium and builds the app.
+   Internet access is required for the image, tools, and Maven dependencies.
+4. In the container terminal, run `mvn spring-boot:run` and open
+   [http://localhost:8080](http://localhost:8080).
+
+The app does not start automatically. Ports 8080 and 18766 are forwarded for
+the app and browser checks. After changing the container configuration, select
+**Dev Containers: Rebuild Container**. The first build can take several minutes.
 
 ## Run the app
 
@@ -59,6 +81,7 @@ and `19.90 EUR` in the cart. The amount is the same. See
 
 ```text
 pom.xml                                      Maven and Spring Boot configuration
+.devcontainer\devcontainer.json              Development tools and forwarded ports
 src\main\java\com\brightshop\
   StorefrontApplication.java                 Application entry point
 src\main\resources\static\
@@ -89,6 +112,12 @@ Windows, build the JAR, then start a separate test server:
 java -jar target\brightshop-storefront-0.1.0-SNAPSHOT.jar --server.address=127.0.0.1 --server.port=18766 '--spring.web.resources.static-locations=file:./src/test/resources/,classpath:/static/'
 ```
 
+In the dev container, use the Linux JAR path:
+
+```bash
+java -jar target/brightshop-storefront-0.1.0-SNAPSHOT.jar --server.address=127.0.0.1 --server.port=18766 '--spring.web.resources.static-locations=file:./src/test/resources/,classpath:/static/'
+```
+
 Open [http://127.0.0.1:18766/storefront-test.html](http://127.0.0.1:18766/storefront-test.html)
 and check for the success message. The checks clear the cart for that server
 address. Stop the test server with `Ctrl+C` when finished.
@@ -97,6 +126,7 @@ address. Stop the test server with `Ctrl+C` when finished.
 
 [Dependabot](.github/dependabot.yml) checks weekly for Maven dependency updates
 in the root `pom.xml`, GitHub Actions updates, and Python dependency updates
-in `.github/skills/powerpoint` through uv. Each ecosystem has a limit of two
-open version-update pull requests. The storefront has no npm dependencies
-or Dockerfile, so those ecosystems are not configured.
+in `.github/skills/powerpoint` through uv. It also checks the dev container
+features for version updates. Each ecosystem has a limit of two open
+version-update pull requests. The storefront has no npm dependencies or
+Dockerfile, so those ecosystems are not configured.
