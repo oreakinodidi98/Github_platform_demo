@@ -92,3 +92,11 @@ java -jar target\brightshop-storefront-0.1.0-SNAPSHOT.jar --server.address=127.0
 Open [http://127.0.0.1:18766/storefront-test.html](http://127.0.0.1:18766/storefront-test.html)
 and check for the success message. The checks clear the cart for that server
 address. Stop the test server with `Ctrl+C` when finished.
+
+## Dependency updates
+
+[Dependabot](.github/dependabot.yml) checks weekly for Maven dependency updates
+in the root `pom.xml`, GitHub Actions updates, and Python dependency updates
+in `.github/skills/powerpoint` through uv. Each ecosystem has a limit of two
+open version-update pull requests. The storefront has no npm dependencies
+or Dockerfile, so those ecosystems are not configured.

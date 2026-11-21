@@ -1,38 +1,25 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
 
 version: 2
 updates:
   - package-ecosystem: "maven"
-    directory: "/caldova_Pharmaceuticals"
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
     commit-message:
       prefix: '[Dependabot]'
       include: 'scope'
-  # Browser-test tooling: routine version updates disabled.
-  # - package-ecosystem: "npm"
-  #   directory: "/caldova_Pharmaceuticals/browser-tests"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 2
-  #   commit-message:
-  #     prefix: '[Dependabot]'
-  #     include: 'scope'
-  # Java container versions follow the POM: routine image updates disabled.
-  # - package-ecosystem: "docker"
-  #   directory: "/caldova_Pharmaceuticals"
-  #   schedule:
-  #     interval: "weekly"
-  #   open-pull-requests-limit: 2
-  #   commit-message:
-  #     prefix: '[Dependabot]'
-  #     include: 'scope'
   - package-ecosystem: "github-actions"
     directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: '[Dependabot]'
+      include: 'scope'
+  - package-ecosystem: "uv"
+    directory: "/.github/skills/powerpoint"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 2
